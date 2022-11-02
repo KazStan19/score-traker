@@ -1,0 +1,14 @@
+<form style="text-align: center ;">
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>{{playerMode ? "Enter players name" : "Enter Column name"}}</mat-label>
+    <input
+      matInput
+      [formControl]="playerControlInput"
+    />
+  </mat-form-field>
+
+  <div class="buttonBatch">
+    <button type="button" mat-stroked-button (click)="onSubmit()">Add</button>
+    <button type="button" mat-stroked-button (click)="onNavigateBack() ">Back</button>
+  </div>
+</form>

@@ -1,0 +1,140 @@
+<div>
+  <h1 style="text-align: center">
+    {{
+      !editMode
+        ? dataSource.name + " Table"
+        : type === "delete"
+        ? "Please click what area you want to delete, and click done when finished"
+        : "Please click what area you want to edit, and click done when finished"
+    }}
+  </h1>
+  <table>
+    <thead>
+      <tr>
+        <th
+          (click)="onClick(i, undefined)"
+          *ngFor="let column of displayedColumns; let i = index"
+        >
+          {{ column }}
+        </th>
+        <th>
+          <tr>
+            <th>
+              <a
+                style="color: #e2b842"
+                (click)="
+                  this.editMode = false;
+                  this.editToggle = false;
+                  this.inputToggle = true
+                "
+                [routerLink]="['columnAdd']"
+                ><mat-icon style="cursor: pointer">add_circle</mat-icon></a
+              >
+            </th>
+          </tr>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="!dataSource.players[0]">
+        <td>Players not found, Please add a player</td>
+        -
+      </tr>
+      <tr *ngFor="let player of dataSource.players; let i = index">
+        <td style="color: #e2b842" (click)="onClick(undefined, player.id)">
+          {{ player.name }}
+        </td>
+        <td
+          *ngFor="let score of dataSource.players[i].score; let y = index"
+          (click)="onClick(y,player.id)"
+        >
+          {{ score !== ''? score : null }}
+          <a *ngIf="
+          score === '' 
+        " (click)="onToggle(player.id,y) "
+            ><mat-icon style="cursor: pointer">add</mat-icon></a
+          >
+        </td>
+        <td
+          *ngIf="
+            dataSource.players[i].score.length < displayedColumns.length - 1
+          "
+        >
+          <a (click)="onToggle(player.id,undefined)"
+            ><mat-icon style="cursor: pointer">add</mat-icon></a
+          >
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>
+          <a
+            (click)="
+              this.editMode = false;
+              this.editToggle = false;
+              this.inputToggle = true
+            "
+            style="color: #e2b842"
+            [routerLink]="['playerAdd']"
+            ><mat-icon style="cursor: pointer">person_add</mat-icon></a
+          >
+          <a [matMenuTriggerFor]="menu" *ngIf="!editMode"
+            ><mat-icon style="cursor: pointer">edit</mat-icon></a
+          >
+          <mat-menu #menu="matMenu">
+            <button
+              style="text-align: center"
+              type="button"
+              mat-menu-item
+              (click)="onEditControl('delete')"
+            >
+              Delete
+            </button>
+            <button
+              style="text-align: center"
+              type="button"
+              mat-menu-item
+              (click)="onEditControl('edit')"
+            >
+              Edit
+            </button>
+          </mat-menu>
+        </th>
+        <th colspan="10" *ngIf="!inputToggle">
+          <mat-label> Enter score</mat-label>
+          <input
+            type="number"
+            style="background-color: #fae8b7"
+            matInput
+            [formControl]="scoreInput"
+          />
+        </th>
+        <th colspan="10" *ngIf="editToggle">
+          <input
+            style="background-color: #fae8b7"
+            matInput
+            [formControl]="editInput"
+          />
+        </th>
+        <th *ngIf="editToggle || !inputToggle">
+          <mat-icon style="cursor: pointer" (click)="handleSubmit()"
+            >add</mat-icon
+          >
+        </th>
+      </tr>
+    </tfoot>
+  </table>
+  <button
+    *ngIf="editMode"
+    color="primary"
+    style="margin-top: 25px"
+    mat-flat-button
+    type="button"
+    (click)="onEditControl('')"
+  >
+    Done
+  </button>
+</div>
+
+<router-outlet></router-outlet>

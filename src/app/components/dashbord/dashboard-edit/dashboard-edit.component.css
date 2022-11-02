@@ -1,0 +1,13 @@
+.buttonBatch{
+
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+        
+}
+
+form{
+
+    margin-top: 25px;
+
+}

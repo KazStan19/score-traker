@@ -1,0 +1,78 @@
+<div class="main">
+  <mat-card [ngClass]="theme === true ? 'dark' : null">
+    <mat-card-title>Game on</mat-card-title>
+    <mat-card-content>
+      <form>
+        <div class="inputField">
+          <mat-form-field
+            [color]="theme === false ? 'primary' : 'warn'"
+            *ngIf="!addMode "
+          >
+            <mat-label>Select game type</mat-label>
+            <mat-select [formControl]="selectedName" required="true">
+              <mat-option
+                *ngFor="let game of games; let i = index"
+                [value]="i"
+                >{{ game.name }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+          <mat-icon
+            *ngIf="selectedName.valid"
+            style="cursor: pointer"
+            (click)="onDeleteGames()"
+            >delete</mat-icon
+          >
+          <mat-icon
+            *ngIf="selectedName.valid"
+            style="cursor: pointer"
+            (click)="onEditToggle()"
+            >edit</mat-icon
+          >
+        </div>
+        <form  *ngIf="addMode ">
+          <mat-form-field [color]="theme === false ? 'primary' : 'warn'">
+            <mat-label>Enter games name</mat-label>
+            <input
+              matInput
+              [formControl]="gameName"
+              placeholder="Enter Name of game"
+              required="true"
+            />
+          </mat-form-field>
+        </form>
+
+        <div class="buttonBatch">
+          <button
+            *ngIf="!addMode "
+            type="button"
+            (click)="onSubmit('start')"
+            mat-flat-button
+            [color]="theme === false ? 'primary' : 'warn'"
+            [disabled]="!selectedName.valid"
+          >
+            Start
+          </button>
+          <button
+            *ngIf="addMode  "
+            type="button"
+            (click)="onSubmit('start')"
+            mat-flat-button
+            [color]="theme === false ? 'primary' : 'warn'"
+            [disabled]="!gameName.valid"
+          >
+            {{editMode ? 'Edit' : 'Add'}}
+          </button>
+          <button
+            type="button"
+            (click)="onSubmit('new')"
+            mat-mini-fab
+            [color]="theme === false ? 'primary' : 'warn'"
+          >
+            {{ addMode   === false ? "New" : "Back" }}
+          </button>
+        </div>
+      </form></mat-card-content
+    >
+  </mat-card>
+</div>

@@ -1,0 +1,56 @@
+mat-card-title{
+
+    text-align: center;
+
+}
+
+form{
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+mat-card{
+
+    padding:5vh 3vw;
+
+}
+
+.dark{
+
+    background-color: rgb(101, 101, 101);
+    color: blanchedalmond;
+
+}
+
+.darkTextField {
+    
+    color: blanchedalmond;
+
+}
+
+.buttonBatch{
+
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+        
+}
+
+.inputField{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+}
+
+.inputAll{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
