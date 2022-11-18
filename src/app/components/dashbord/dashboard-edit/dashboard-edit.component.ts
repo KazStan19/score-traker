@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DashBoardService } from '../dashboard.service';
 
@@ -19,30 +19,30 @@ export class DashboardEditComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.pathFromRoot[1].params.subscribe((params: Params) => {
+
+    this.route.parent?.params.subscribe((params: Params) => {
       this.id = +params['id'];
     });
-
-    if (
-      this.router.url.split('/')[this.router.url.split('/').length - 1] ===
-      'playerAdd'
-    )
-      this.playerMode = !this.playerMode;
+    this.route.params.subscribe((params: Params) => {
+      if(params['type'] !== 'playerAdd' && params['type'] !== 'columnAdd' )this.router.navigate(['game',this.id])
+      this.playerMode = params['type'] === 'playerAdd' ? true : false
+    });
+    
   }
 
   onNavigateBack() {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.router.navigate(['game',this.id]);
   }
 
   onSubmit() {
     if (this.playerControlInput.value && this.playerMode) {
       this.dbService.addPlayer(this.id, this.playerControlInput.value);
       this.onNavigateBack();
-    } else if (this.playerControlInput.value){
+    } else if (this.playerControlInput.value) {
       this.dbService.addColumn(this.id, this.playerControlInput.value);
       this.onNavigateBack();
     }
   }
 
-  playerControlInput = new FormControl('');
+  playerControlInput = new FormControl('', Validators.required);
 }

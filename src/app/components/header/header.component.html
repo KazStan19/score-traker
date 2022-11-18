@@ -1,24 +1,22 @@
 <mat-toolbar
-  style="height: 7vh; position: fixed;"
+  style="height: 7vh; position: fixed"
   [color]="theme === false ? 'primary' : 'warn'"
 >
-  <button
-    mat-icon-button
-    (click) = "onNavigate()"
-  >
+  <button id="home" mat-icon-button (click)="onNavigate()">
     <mat-icon>home</mat-icon>
   </button>
   <span class="example-spacer"></span>
   <button
     mat-icon-button
     aria-label="Example icon-button with menu icon"
+    id="setting"
     [matMenuTriggerFor]="menu"
     type="button"
   >
     <mat-icon>settings</mat-icon>
   </button>
-  <mat-menu #menu="matMenu">
-    <div mat-menu-item>
+  <mat-menu id="menu" #menu="matMenu">
+    <div mat-menu-item id="switch">
       <mat-slide-toggle
         class="custom-class"
         (click)="$event.stopPropagation(); onClick()"

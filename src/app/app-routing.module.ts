@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LandingComponent } from './components/landing/landing.component';
 import { DashbordComponent } from './components/dashbord/dashbord.component';
 import { DashboardEditComponent } from './components/dashbord/dashboard-edit/dashboard-edit.component';
+import { DashBoardGuardService } from './components/dashbord/dashboard-guard.service';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -10,11 +11,13 @@ const routes: Routes = [
   {
     path: 'game/:id',
     component: DashbordComponent,
+    canActivate:[DashBoardGuardService],
     children: [
-      { path: 'playerAdd', component: DashboardEditComponent },
-      { path: 'columnAdd', component: DashboardEditComponent },
+      { path: ':type', component: DashboardEditComponent },
+ 
     ],
   },
+  { path: '**', redirectTo: '/home' }
 ];
 
 @NgModule({

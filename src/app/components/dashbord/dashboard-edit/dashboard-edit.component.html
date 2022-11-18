@@ -1,6 +1,7 @@
 <form style="text-align: center ;">
   <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label>{{playerMode ? "Enter players name" : "Enter Column name"}}</mat-label>
+    <mat-label id="columnLabel" *ngIf="!playerMode">Enter column name</mat-label>
+    <mat-label id="playerLabel" *ngIf="playerMode">Enter player name</mat-label>
     <input
       matInput
       [formControl]="playerControlInput"
@@ -8,7 +9,7 @@
   </mat-form-field>
 
   <div class="buttonBatch">
-    <button type="button" mat-stroked-button (click)="onSubmit()">Add</button>
-    <button type="button" mat-stroked-button (click)="onNavigateBack() ">Back</button>
+    <button id="add" type="button" mat-stroked-button [disabled]="!playerControlInput.valid" (click)="onSubmit()">Add</button>
+    <button id="back" type="button" mat-stroked-button (click)="onNavigateBack() ">Back</button>
   </div>
 </form>

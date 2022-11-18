@@ -15,6 +15,7 @@ import { DashboardEditComponent } from './components/dashbord/dashboard-edit/das
 import { DashboardModule } from './components/dashbord/dashboard.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { GameInterceptorsService } from './shared/game-interceptors.service';
+import { DashBoardGuardService } from './components/dashbord/dashboard-guard.service';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { GameInterceptorsService } from './shared/game-interceptors.service';
       provide: HTTP_INTERCEPTORS,
       useClass: GameInterceptorsService,
       multi: true,
-    }
+    },
+    DashBoardGuardService
   ],
   bootstrap: [AppComponent],
 })

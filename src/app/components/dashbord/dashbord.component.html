@@ -21,13 +21,9 @@
           <tr>
             <th>
               <a
+                id="addColumn"
                 style="color: #e2b842"
-                (click)="
-                  this.editMode = false;
-                  this.editToggle = false;
-                  this.inputToggle = true
-                "
-                [routerLink]="['columnAdd']"
+                (click)="addNavigate('columnAdd')"
                 ><mat-icon style="cursor: pointer">add_circle</mat-icon></a
               >
             </th>
@@ -38,20 +34,21 @@
     <tbody>
       <tr *ngIf="!dataSource.players[0]">
         <td>Players not found, Please add a player</td>
-        -
       </tr>
       <tr *ngFor="let player of dataSource.players; let i = index">
-        <td style="color: #e2b842" (click)="onClick(undefined, player.id)">
+        <td
+          style="color: #e2b842"
+          [id]="'name' + player.id"
+          (click)="onClick(undefined, player.id)"
+        >
           {{ player.name }}
         </td>
         <td
           *ngFor="let score of dataSource.players[i].score; let y = index"
-          (click)="onClick(y,player.id)"
+          (click)="onClick(y, player.id)"
         >
-          {{ score !== ''? score : null }}
-          <a *ngIf="
-          score === '' 
-        " (click)="onToggle(player.id,y) "
+          {{ score !== "" ? score : null }}
+          <a *ngIf="score === ''" (click)="onToggle(player.id, y)"
             ><mat-icon style="cursor: pointer">add</mat-icon></a
           >
         </td>
@@ -60,7 +57,7 @@
             dataSource.players[i].score.length < displayedColumns.length - 1
           "
         >
-          <a (click)="onToggle(player.id,undefined)"
+          <a [id]="'add' + player.id" (click)="onToggle(player.id, undefined)"
             ><mat-icon style="cursor: pointer">add</mat-icon></a
           >
         </td>
@@ -70,22 +67,19 @@
       <tr>
         <th>
           <a
-            (click)="
-              this.editMode = false;
-              this.editToggle = false;
-              this.inputToggle = true
-            "
+            (click)="addNavigate('playerAdd')"
+            id="playerAdd"
             style="color: #e2b842"
-            [routerLink]="['playerAdd']"
             ><mat-icon style="cursor: pointer">person_add</mat-icon></a
           >
-          <a [matMenuTriggerFor]="menu" *ngIf="!editMode"
+          <a [matMenuTriggerFor]="menu" id="menuTable" *ngIf="!editMode"
             ><mat-icon style="cursor: pointer">edit</mat-icon></a
           >
           <mat-menu #menu="matMenu">
             <button
               style="text-align: center"
               type="button"
+              id="delete"
               mat-menu-item
               (click)="onEditControl('delete')"
             >
@@ -94,6 +88,7 @@
             <button
               style="text-align: center"
               type="button"
+              id="edit"
               mat-menu-item
               (click)="onEditControl('edit')"
             >
@@ -102,9 +97,9 @@
           </mat-menu>
         </th>
         <th colspan="10" *ngIf="!inputToggle">
-          <mat-label> Enter score</mat-label>
           <input
             type="number"
+            placeholder="enter score"
             style="background-color: #fae8b7"
             matInput
             [formControl]="scoreInput"
@@ -113,14 +108,20 @@
         <th colspan="10" *ngIf="editToggle">
           <input
             style="background-color: #fae8b7"
+            placeholder="enter edit"
             matInput
             [formControl]="editInput"
+            [pattern]="
+              idUser !== undefined && columnId !== undefined
+                ? '/^-?(0|[1-9]\d*)?$/'
+                : '^[a-z0-9_-]{8,15}$'
+            "
           />
         </th>
         <th *ngIf="editToggle || !inputToggle">
-          <mat-icon style="cursor: pointer" (click)="handleSubmit()"
-            >add</mat-icon
-          >
+          <button type="button" mat-button (click)="handleSubmit()">
+            <mat-icon style="cursor: pointer">add</mat-icon>
+          </button>
         </th>
       </tr>
     </tfoot>

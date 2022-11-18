@@ -6,31 +6,35 @@
         <div class="inputField">
           <mat-form-field
             [color]="theme === false ? 'primary' : 'warn'"
-            *ngIf="!addMode "
+            *ngIf="addMode === false || editMode === false"
           >
             <mat-label>Select game type</mat-label>
-            <mat-select [formControl]="selectedName" required="true">
+            <mat-select [formControl]="selectedName" id="select" required="true">
+      
               <mat-option
-                *ngFor="let game of games; let i = index"
-                [value]="i"
+                [id]="'option'+game.id"
+                *ngFor="let game of games;"
+                [value]="game.id"
                 >{{ game.name }}</mat-option
               >
             </mat-select>
           </mat-form-field>
           <mat-icon
-            *ngIf="selectedName.valid"
+            id="deleteGame"
+            *ngIf="selectedName.value != 0 && addMode === false && editMode === false"
             style="cursor: pointer"
             (click)="onDeleteGames()"
             >delete</mat-icon
           >
           <mat-icon
-            *ngIf="selectedName.valid"
+            id="editGame"
+            *ngIf="selectedName.value != 0 && addMode === false && editMode === false"
             style="cursor: pointer"
             (click)="onEditToggle()"
             >edit</mat-icon
           >
         </div>
-        <form  *ngIf="addMode ">
+        <form  *ngIf="addMode === true">
           <mat-form-field [color]="theme === false ? 'primary' : 'warn'">
             <mat-label>Enter games name</mat-label>
             <input
@@ -54,7 +58,8 @@
             Start
           </button>
           <button
-            *ngIf="addMode  "
+            *ngIf="addMode"
+            id="editAddBtn"
             type="button"
             (click)="onSubmit('start')"
             mat-flat-button
@@ -65,11 +70,12 @@
           </button>
           <button
             type="button"
+            id="newBackBtn"
             (click)="onSubmit('new')"
             mat-mini-fab
             [color]="theme === false ? 'primary' : 'warn'"
           >
-            {{ addMode   === false ? "New" : "Back" }}
+            {{ addMode === false ? "New" : "Back" }}
           </button>
         </div>
       </form></mat-card-content

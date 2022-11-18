@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { startWith } from 'rxjs/operators';
+
 
 @Injectable()
 export class SharedService {
-  themeChanged = new Subject<boolean>();
+  
   theme: boolean = false;
+  themeChanged = new Subject<boolean>();
+  
 
   switchTheme() {
     this.theme = !this.theme;

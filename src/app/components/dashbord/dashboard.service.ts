@@ -1,6 +1,8 @@
+
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, tap } from 'rxjs';
 import { Game } from 'src/app/models/game.model';
 
 @Injectable()
@@ -13,22 +15,23 @@ export class DashBoardService {
   constructor(private http: HttpClient) {}
 
   getColumns(id: number) {
-    this.http
+    return this.http
       .get<{ id: string; columns: string[] }[]>('columns', {
         params: { id: id },
       })
-      .subscribe((res) => {
-        let foundGameColumns = res.find((item) => +item.id === id);
+      .pipe(
+        tap((res) => {
+          let foundGameColumns = res.find((item) => +item.id === id);
 
-        if (foundGameColumns) {
-          this.displayedColumns = foundGameColumns.columns;
-        }
+          if (foundGameColumns) {
+            this.displayedColumns = foundGameColumns.columns;
+          }
 
-        this.displayedColumnsChanged.next(this.displayedColumns);
-      });
-
-    return this.displayedColumns;
+          this.displayedColumnsChanged.next(this.displayedColumns);
+        })
+      );
   }
+
 
   addPlayer(id: number, name: string) {
     this.http
@@ -48,7 +51,6 @@ export class DashBoardService {
     columnId: number | undefined,
     score: number
   ) {
-    console.log(userId);
     this.http
       .patch<Game>('score', {
         id: id,
@@ -76,10 +78,12 @@ export class DashBoardService {
   }
 
   getGame(id: number) {
-    this.http
-      .get<Game[]>('games')
-      .subscribe((item) => (this.content = item[id]));
-    return this.content;
+    return this.http.get<Game[]>('games').pipe(
+      tap((item) => {
+        let game = item.find((item) => item.id === id);
+        this.contentChanged.next(game!);
+      })
+    );
   }
 
   deleteItem(
@@ -114,12 +118,12 @@ export class DashBoardService {
           .subscribe((item) => {
             this.displayedColumns = item.columns;
           });
-        this.http
-          .get<Game[]>('games')
-          .subscribe((item) => (this.content = item[id]));
+        this.http.get<Game[]>('games').subscribe((res) => {
+          let game = res.find((item) => item.id === id);
+          this.content = game!;
+        });
       }
     }
-
     this.contentChanged.next(this.content);
     this.displayedColumnsChanged.next(this.displayedColumns);
   }
@@ -160,13 +164,12 @@ export class DashBoardService {
     ) {
       if (this.displayedColumns[columnId] !== 'name') {
         this.http
-          .patch<{ id: string; columns: string[] }>('columns/edit', {
+          .patch<{ id: string; columns: string[] }>('column/edit', {
             id: id,
             columnId: columnId,
             name: name,
           })
-          .subscribe((item) => (this.displayedColumns = item.columns))
-          ;
+          .subscribe((item) => (this.displayedColumns = item.columns));
       }
     }
     this.contentChanged.next(this.content);

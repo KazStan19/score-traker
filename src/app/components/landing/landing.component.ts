@@ -1,14 +1,8 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Game } from 'src/app/models/game.model';
 import { SharedService } from 'src/app/shared/shared.service';
-import { Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { LandingService } from './landing.service';
 @Component({
@@ -17,8 +11,9 @@ import { LandingService } from './landing.service';
   styleUrls: ['./landing.component.css'],
 })
 export class LandingComponent implements OnInit, OnDestroy {
-  selected = '';
+  selected = 0;
   games: Game[] = [];
+  id: number = 0;
   subsciption?: Subscription;
   subsciptionGame?: Subscription;
   theme: boolean = false;
@@ -28,25 +23,24 @@ export class LandingComponent implements OnInit, OnDestroy {
   constructor(
     private sharedService: SharedService,
     private landingService: LandingService,
-    private router: Router,
-    private changeRef: ChangeDetectorRef
+    private router: Router
   ) {}
 
-  ngAfterViewInit(): void {
-    this.changeRef.detectChanges();
-  }
-
   ngOnInit(): void {
-    this.games = this.landingService.getGames();
+    this.selectedName.setValue(0)
     this.subsciptionGame = this.landingService.gamesChanged.subscribe(
       (item: Game[]) => {
         this.games = item;
-        //console.log(item);
       }
     );
     this.subsciptionGame.add(
       this.sharedService.themeChanged.subscribe((item: boolean) => {
         this.theme = item;
+      })
+    );
+    this.subsciptionGame.add(
+      this.landingService.getGames().subscribe((item: Game[]) => {
+        this.games = item;
       })
     );
   }
@@ -58,22 +52,22 @@ export class LandingComponent implements OnInit, OnDestroy {
   onDeleteGames() {
     if (typeof this.selectedName.value === 'number')
       this.landingService.deleteGame(this.selectedName.value);
-    this.selectedName.reset('');
+    this.selectedName.reset(0);
   }
 
   onEditGames(name: string) {
     if (typeof this.selectedName.value === 'number')
       this.landingService.editGame(this.selectedName.value, name);
-    this.selectedName.reset('');
   }
 
   onEditToggle() {
     this.editMode = !this.editMode;
     this.addMode = !this.addMode;
-    if (typeof this.selectedName.value === 'number')
-      this.gameName.setValue(this.games[this.selectedName.value].name);
-    this.selectedName.reset('');
-  }
+    if (typeof this.selectedName.value === 'number'){
+      let game = this.games.find(item => item.id === this.selectedName.value)
+      this.gameName.setValue(game!.name);
+  
+    }}
 
   onSubmit(type: string) {
     if (type === 'start') {
@@ -81,22 +75,22 @@ export class LandingComponent implements OnInit, OnDestroy {
         this.router.navigate(['game', this.selectedName.value]);
       else {
         if (this.gameName.value && this.editMode === false) {
-          this.landingService.addGame(this.gameName.value);
-          this.router.navigate(['game', this.games.length - 1]);
+          this.landingService
+            .addGame(this.gameName.value)
+          this.router.navigate(['game', this.games[this.games.length-1].id]);
         } else if (this.gameName.value) {
           this.onEditGames(this.gameName.value);
-          this.selectedName.reset('')
-          this.gameName.reset('')
+          this.gameName.reset('');
           this.addMode = false;
           this.editMode = false;
         }
       }
     } else {
-      this.selectedName.reset('');
+      this.selectedName.reset(0);
       this.addMode = !this.addMode;
     }
   }
 
-  selectedName = new FormControl('');
+  selectedName = new FormControl(0);
   gameName = new FormControl('');
 }

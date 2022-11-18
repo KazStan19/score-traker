@@ -14,10 +14,10 @@ import { LandingService } from './landing.service';
 
 @NgModule({
     exports: [
+      CommonModule,
       MatSelectModule,
       MatButtonModule,
       MatCardModule,
-      CommonModule,
       ReactiveFormsModule,
       FormsModule,
       MatDividerModule,

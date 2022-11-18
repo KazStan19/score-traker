@@ -1,8 +1,7 @@
-import { Player } from "./player.modle";
+import { Player } from './player.modle';
 
-export interface Game{
-
-    name:string
-    players:Player[]|[]
-
+export interface Game {
+  id: number;
+  name: string;
+  players: Player[] | [];
 }
