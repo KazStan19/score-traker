@@ -146,7 +146,6 @@ describe('DataService', () => {
     service.contentChanged.subscribe((item) => {
       expect(item.players[0].score.length).toEqual(0);
     });
-    //expect(req.request.url).toEqual('player');
     req.flush(games);
   });
 
@@ -159,7 +158,7 @@ describe('DataService', () => {
     service.displayedColumnsChanged.subscribe((item) => {
       expect(item.length).toEqual(3);
     });
-    //expect(req.request.url).toEqual('player');
+
     req.flush(games);
   });
 });
